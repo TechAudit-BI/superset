@@ -26,6 +26,7 @@ import React, {
   ComponentPropsWithRef,
   CSSProperties,
   UIEventHandler,
+  useEffect,
 } from 'react';
 import { TableInstance, Hooks } from 'react-table';
 import getScrollBarSize from '../utils/getScrollBarSize';
@@ -309,6 +310,21 @@ function StickyWrap({
       </div>
     );
   }
+
+  useEffect(() => {
+    const bodyElement = scrollBodyRef?.current;
+    const headerElement = scrollHeaderRef?.current;
+
+    if (bodyElement && headerElement && colWidths && bodyHeight) {
+      const isChrome =
+        /Chrome/.test(navigator.userAgent) &&
+        /Google Inc/.test(navigator.vendor);
+      headerElement.style.paddingRight =
+        bodyElement.scrollHeight > bodyElement.clientHeight && isChrome
+          ? '17px'
+          : '0px';
+    }
+  }, [bodyHeight, colWidths, scrollBodyRef]);
 
   return (
     <div
